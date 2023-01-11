@@ -92,10 +92,10 @@ function buy(id) {
 
 // Exercise 2
 function cleanCart() {
-    cartList = []
+    cart = []
     total = 0
-    document.getElementById('count_product').innerHTML = cartList.length
-
+    
+   printCart()
 }
 
 // Exercise 3
@@ -114,9 +114,10 @@ function calculateTotal() {
             total += cart[i].subtotal
         }
 
+        console.log(total)
+        document.getElementById("total_price").innerHTML = total;
 
     }
-    console.log(total)
 
 }
 
@@ -146,6 +147,7 @@ function generateCart() {
     console.log(cart)
     applyPromotionsCart()
     calculateTotal()
+    printCart()
 
 }
 
@@ -167,7 +169,6 @@ function applyPromotionsCart() {
 
     }
 }
-
 
 
 // Exercise 6
@@ -194,20 +195,50 @@ function printCart() {
     document.getElementById("total_price").innerHTML = total.toFixed(2);
 
 }
-
+// Exercise 7 at checkout.js
 // ** Nivell II **
 
-// Exercise 7
+// Exercise 8
 function addToCart(id) {
     // Refactor previous code in order to simplify it 
     // 1. Loop for to the array products to get the item to add to cart
     // 2. Add found product to the cart array or update its quantity in case it has been added previously.
+    for (let i = 0; i < products.length; i++) {
+        if (products[i].id === id) {
+            const productSelected = products[i]
+            const productExist = cart.includes(productSelected)
+
+            if (!productExist) {
+                productSelected.quantity = 1
+                productSelected.subtotal = productSelected.price
+                cart.push(productSelected)
+            }
+            if (productExist) {
+                productSelected.quantity += 1
+                productSelected.subtotal += productSelected.price
+            }
+        }
+    }
+    applyPromotionsCart(cart);
+    calculateTotal();
+    printCart();
 }
 
-// Exercise 8
+// Exercise 9
 function removeFromCart(id) {
     // 1. Loop for to the array products to get the item to add to cart
     // 2. Add found product to the cartList array
+    const productDelated = cart.find(e => e.id === id)
+    productDelated.quantity--
+    productDelated.subtotal -= productDelated.price
+
+    if (productDelated.quantity === 0) {
+        const indexOfProductDelated = cart.findIndex(e => e.id === id)
+        cart.splice(indexOfProductDelated, 1)
+    }
+    applyPromotionsCart(cart);
+    calculateTotal();
+    printCart();
 }
 
 function open_modal() {
